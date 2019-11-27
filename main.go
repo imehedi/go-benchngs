@@ -2,40 +2,52 @@ package main
 
 import "fmt"
 
-// Different alignment tool produces alignment results in different format.
-// Our procedure do not discriminate the tools based on the tool’s own claim
-// of accuracy. For example, the E-value reported by the BLAST tool is not
-// carried towards the result of our scoring. We collect an information set, R
-// from the alignment results containing: (i) query id (q(n)), (ii) reference sequence identifier (ref),
-// (iii) start position of the read (stp). This information
-// is then compared with their counterparts from the GSA.
-type Results struct {
-	queryID           string // Simulated short reads, q(n) ⊂ Q of variant bp lengths n ⊂ {50, 100, 150, 400};
+// Simulated short read sequences characteristics chart
+type ShortSequence struct {
+	seqID             string // Simulated short reads, q(n) ⊂ Q of variant bp lengths n ⊂ {50, 100, 150, 400};
 	refSeqID          string
 	readStartPosition int8
 }
 
-type QueryLength struct {
-	qLen int
-}
+var simulatedReadsParameters ShortSequence
+var alignmentResultsParameters ShortSequence
 
 func main() {
 
-	print(fOneCalculator(positivePredictiveValueCalculator(5, 4), positiveRateCalculator(3, 5)))
-	benchNGS("blast", 444)
+	fmt.Printf("%f", benchNGS("blast", 444))
 
 }
 
-func benchNGS(toolName string, seqLength int8) (fOneScore float64) {
+func benchNGS(toolName string, seqLength int) (fOneScore float64) {
+	// ToDo 1: Align reads to model genome
+	// ToDo 2: From new alignment results generate R ← {q(n), ref, stp}
+	// ToDo 3: Compare R with GSA and produce a set S ← {T P, F P, F N}
+
 	fmt.Printf("%v", toolName)
 	fmt.Printf("%d", seqLength)
-	return float64(seqLength)
+
+	myEntry := ShortSequence{
+		"read1",
+		"refSeq1",
+		10,
+	}
+	myResults := ShortSequence{
+		"read1",
+		"refSeq1",
+		10,
+	}
+	return fOneCalculator(myEntry, myResults)
 }
 
 // Rijsbergen’s accuracy measurement score named here as fOneScore,
 // We used true positive rate (r) and positive predictive rate (p), to compute F1 score.
 // Sensitivity or true positive rate, alternatively called as Recall.
-func fOneCalculator(positivePredictiveValue, positiveRate float64) (fOneScore float64) {
+func fOneCalculator(simulatedReadsParameters, alignmentResultsParameters ShortSequence) (fOneScore float64) {
+
+	var tp, fp, fn, positivePredictiveValue, positiveRate float64
+	fmt.Printf("%f,%f,%f", tp, fp, fn)
+	positivePredictiveValue = positivePredictiveValueCalculator(5, 5)
+	positiveRate = positiveRateCalculator(4, 5)
 	return 2 * ((positivePredictiveValue * positiveRate) / (positivePredictiveValue + positiveRate))
 }
 
