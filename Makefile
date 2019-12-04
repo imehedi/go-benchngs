@@ -1,6 +1,6 @@
 .PHONY: all run-local bench docker coverage.xml
 
-all: go-benchngs
+all: go-benchalign
 
 SRC := $(wildcard go.mod go.sum *.go **/*.go)
 

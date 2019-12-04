@@ -106,13 +106,16 @@ func Chopper(filename string) {
 			header := fmt.Sprintf(">%s_%d | %s - %d \n", record.id, lengthArray[i], record.desc, len(record.seq))
 			_, err = f.Write([]byte(header))
 			check(err)
-			var j int
-			if i == 0 {
-				j = 0
-			} else {
-				j = i - 1
-			}
-			body := fmt.Sprintf(record.seq[lengthArray[j]:lengthArray[i]])
+			//var j int
+			//if i < 1 {
+			//	j = 0
+			//}
+			//if i == 1 {
+			//	j = 1
+			//} else {
+			//	j = i - 1
+			//}
+			body := fmt.Sprintf(record.seq[(lengthArray[i]):(lengthArray[i] - 1)])
 			_, err = f.Write([]byte(body))
 			check(err)
 
